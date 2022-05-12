@@ -1,0 +1,156 @@
+<mat-toolbar>
+  <img src="./assets/icon/wells-fargo-bank.svg" width="50" alt="Wells Fargo icon"/>
+  <div>
+    <p style="margin: 0; font-size: 14px;">Teamworks</p>
+    <h1 style="margin-top: 0;">Personal Workspace</h1>
+  </div>
+  <!--  <span class="example-spacer"></span>-->
+</mat-toolbar>
+<!--<mat-grid-list cols="5" rowHeight="100%">-->
+<!--  &lt;!&ndash;  <mat-grid-tile&ndash;&gt;-->
+<!--  &lt;!&ndash;    *ngFor="let tile of tiles"&ndash;&gt;-->
+<!--  &lt;!&ndash;    [colspan]="tile.cols"&ndash;&gt;-->
+<!--  &lt;!&ndash;    [rowspan]="tile.rows"&ndash;&gt;-->
+<!--  &lt;!&ndash;    [style.background]="tile.color">&ndash;&gt;-->
+<!--  &lt;!&ndash;    {{tile.text}}&ndash;&gt;-->
+<!--  &lt;!&ndash;  </mat-grid-tile>&ndash;&gt;-->
+<!--  <mat-grid-tile [colspan]="1" [rowspan]="1">-->
+<!--    <div class="mat-grid-tile-content">-->
+<!--      <p>this is sidebar left></p>-->
+<!--    </div>-->
+<!--  </mat-grid-tile>-->
+<!--  <mat-grid-tile   [colspan]="3" [rowspan]="1" >-->
+<!--    <div class="mat-grid-tile-content">-->
+<!--      <p>this is the middle section</p>-->
+<!--    </div>-->
+<!--  </mat-grid-tile>-->
+<!--  <mat-grid-tile [colspan]="1" [rowspan]="1">-->
+<!--    <div class="mat-grid-tile-content">-->
+<!--      <mat-card>-->
+<!--        <mat-card-header>-->
+<!--          <mat-card-title>Organizational Outline</mat-card-title>-->
+<!--        </mat-card-header>-->
+<!--        <mat-card-content>-->
+<!--          <ul>-->
+<!--            <li>list of names...</li>-->
+<!--            <li>replace with array of names and titles</li>-->
+<!--          </ul>-->
+<!--        </mat-card-content>-->
+<!--      </mat-card>-->
+<!--    </div>-->
+<!--  </mat-grid-tile>-->
+<!--</mat-grid-list>-->
+
+<div class="form-field">
+  <label for="voice-control" class="form-field__label">
+    Voice:
+  </label>
+  <div class="form-field__content">
+    <select
+      id="voice-control"
+      name="voice"
+      [(ngModel)]="selectedVoice"
+      (change)="demoSelectedVoice(); updateSayCommand()"
+      class="form-field__control">
+      <option value="">- Select a voice -</option>
+      <option
+        *ngFor="let voice of voices"
+        [ngValue]="voice">
+        {{ voice.name }}
+
+        <ng-template [ngIf]="recommendedVoices[ voice.name ]">
+          &larr; Recommended
+        </ng-template>
+      </option>
+    </select>
+
+    <div class="form-field__subnote">
+      ( &larr; ) indicates a voice that Ben could understand clearly.
+    </div>
+  </div>
+</div>
+
+<div class="form-field">
+  <label for="rate-control" class="form-field__label">
+    Speed:
+  </label>
+  <div class="form-field__content">
+    <select
+      id="rate-control"
+      name="rate"
+      [(ngModel)]="selectedRate"
+      (change)="demoSelectedVoice(); updateSayCommand()"
+      class="form-field__control">
+      <option
+        *ngFor="let rate of rates"
+        [ngValue]="rate">
+        {{ rate }}
+
+        <ng-template [ngIf]="( rate === 1 )">
+          ( Normal )
+        </ng-template>
+      </option>
+    </select>
+  </div>
+</div>
+
+<div class="form-field">
+  <label for="text-control" class="form-field__label">
+    Text:
+  </label>
+  <div class="form-field__content">
+		<textarea
+      id="text-control"
+      name="text"
+      [(ngModel)]="text"
+      (input)="updateSayCommand()"
+      (keydown.Meta.Enter)="speak()"
+      class="form-field__control"
+    ></textarea>
+
+    <div class="form-field__subnote">
+      You can hit <code>CMD+Enter</code> to speak text.
+    </div>
+  </div>
+</div>
+
+<div class="form-actions">
+  <button
+    type="button"
+    (click)="speak()"
+    class="form-actions__button">
+    Speak text
+  </button>
+
+  <button
+    type="button"
+    (click)="stop()"
+    class="form-actions__button form-actions__button--secondary">
+    Stop speaking
+  </button>
+</div>
+
+
+<div *ngIf="sayCommand" class="say">
+
+  <h3 class="say__title">
+    On MacOS? Want to generate a sound file?
+  </h3>
+
+  <p class="say__description">
+    In the terminal, you can use the <code>say</code> binary to generate an audio
+    file (.aiff) using the following command:
+  </p>
+
+  <input
+    #sayRef
+    [value]="sayCommand"
+    (click)="sayRef.select()"
+    (focus)="sayRef.select()"
+    class="say__code"
+  />
+
+</div>
+
+
+
