@@ -1,0 +1,2 @@
+rootProject.name = 'pronunciation_tool'
+include 'pronunciation-frontend'
