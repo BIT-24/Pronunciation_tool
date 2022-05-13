@@ -10,23 +10,25 @@ import {MatIconModule} from "@angular/material/icon";
 import {MatGridListModule} from "@angular/material/grid-list";
 import {MatCardModule} from "@angular/material/card";
 import {FormsModule, ReactiveFormsModule} from "@angular/forms";
+import {MatTabsModule} from "@angular/material/tabs";
 
 @NgModule({
   declarations: [
     AppComponent,
     ProfileComponent,
   ],
-  imports: [
-    BrowserModule,
-    MatToolbarModule,
-    BrowserAnimationsModule,
-    MatButtonModule,
-    MatIconModule,
-    MatGridListModule,
-    MatCardModule,
-    ReactiveFormsModule,
-    FormsModule
-  ],
+    imports: [
+        BrowserModule,
+        MatToolbarModule,
+        BrowserAnimationsModule,
+        MatButtonModule,
+        MatIconModule,
+        MatGridListModule,
+        MatCardModule,
+        ReactiveFormsModule,
+        FormsModule,
+        MatTabsModule
+    ],
   providers: [],
   bootstrap: [AppComponent]
 })
