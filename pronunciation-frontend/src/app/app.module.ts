@@ -11,6 +11,7 @@ import {MatGridListModule} from "@angular/material/grid-list";
 import {MatCardModule} from "@angular/material/card";
 import {FormsModule, ReactiveFormsModule} from "@angular/forms";
 import {MatTabsModule} from "@angular/material/tabs";
+import {MatMenuModule} from "@angular/material/menu";
 
 @NgModule({
   declarations: [
@@ -27,7 +28,8 @@ import {MatTabsModule} from "@angular/material/tabs";
         MatCardModule,
         ReactiveFormsModule,
         FormsModule,
-        MatTabsModule
+        MatTabsModule,
+        MatMenuModule
     ],
   providers: [],
   bootstrap: [AppComponent]

@@ -26,7 +26,25 @@
   <mat-grid-tile   [colspan]="3" [rowspan]="1" >
     <div class="mat-grid-tile-content">
       <div style="line-height: 0;">
-        <h1 style=" line-height: revert; margin-top: 3%; font-size: xx-large">{{firstName}} {{lastName}}</h1><br/>
+          <h1 style=" line-height: revert; margin-top: 3%; font-size: xx-large">{{firstName}} {{lastName}}
+          <button mat-button [matMenuTriggerFor]="menu">
+            <mat-icon>play_circle_filled</mat-icon>
+          </button>
+          <mat-menu #menu="matMenu">
+            <button mat-menu-item>
+              <mat-icon>play_circle_filled</mat-icon>
+              Recorded Pronunciation
+            </button>
+            <button mat-menu-item>
+              <mat-icon>play_circle_filled</mat-icon>
+              System Locale Pronunciation
+            </button>
+            <button mat-menu-item>
+              <mat-icon>play_circle_filled</mat-icon>
+              System Default Pronunciation
+            </button>
+          </mat-menu></h1>
+        <br/>
         <h4>{{title}} | {{department}}</h4>
         <p style="margin-top: 3px">
           <a href="profile.component.html">
@@ -55,8 +73,14 @@
         </mat-card-header>
         <mat-card-content>
           <ul>
-            <li>list of names...</li>
-            <li>replace with array of names and titles</li>
+            <li><a href="profile.component.html" class="blueText">Charlie Scharf</a> <br> CEO</li>
+
+            <li>Saul Van Beurden</li>
+            <li>Lal Sah</li>
+            <li>Arno Baccam</li>
+            <li>Natalie Hong</li>
+            <li>Ryan Spice</li>
+            <li>Vishal Barot</li>
           </ul>
         </mat-card-content>
       </mat-card>
