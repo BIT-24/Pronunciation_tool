@@ -36,6 +36,10 @@
               <mat-icon>play_circle_filled</mat-icon>
               System Default Pronunciation
             </button>
+            <button mat-menu-item (click)="openRecordDialog()">
+              <mat-icon>mic</mat-icon>
+              Record New Pronunciation
+            </button>
           </mat-menu></h1>
         <br/>
         <h4>{{selectedUser.title}} | {{selectedUser.department}}</h4>

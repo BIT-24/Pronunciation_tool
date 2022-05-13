@@ -13,26 +13,34 @@ import {FormsModule, ReactiveFormsModule} from "@angular/forms";
 import {MatTabsModule} from "@angular/material/tabs";
 import {MatMenuModule} from "@angular/material/menu";
 import {HttpClientModule} from "@angular/common/http";
+import {RecordDialogComponent} from './record-dialog/record-dialog.component';
+import {MatProgressBarModule} from "@angular/material/progress-bar";
+import {MatDialogModule} from "@angular/material/dialog";
+import {MatRippleModule} from "@angular/material/core";
 
 @NgModule({
   declarations: [
     AppComponent,
-    ProfileComponent
+    ProfileComponent,
+    RecordDialogComponent,
   ],
-    imports: [
-        BrowserModule,
-        MatToolbarModule,
-        BrowserAnimationsModule,
-        MatButtonModule,
-        MatIconModule,
-        MatGridListModule,
-        MatCardModule,
-        ReactiveFormsModule,
-        FormsModule,
-        MatTabsModule,
-        MatMenuModule,
-        HttpClientModule
-    ],
+  imports: [
+    BrowserModule,
+    MatToolbarModule,
+    BrowserAnimationsModule,
+    MatButtonModule,
+    MatIconModule,
+    MatGridListModule,
+    MatCardModule,
+    ReactiveFormsModule,
+    FormsModule,
+    MatTabsModule,
+    MatMenuModule,
+    MatProgressBarModule,
+    MatDialogModule,
+    MatRippleModule,
+    HttpClientModule
+  ],
   providers: [],
   bootstrap: [AppComponent]
 })
