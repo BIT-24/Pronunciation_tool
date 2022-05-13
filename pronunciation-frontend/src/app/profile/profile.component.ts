@@ -21,6 +21,8 @@ export class ProfileComponent implements OnInit {
   center: string = "12345678"
   mac: string = "N9409-24"
   address: string = "2801 4th Ave S Minneapolis, MN 4444-0034 USA"
+  cityState: string = "Minneapolis, MN"
+  country: string = "USA"
 
 
   ngOnInit() {
