@@ -1,4 +1,6 @@
 import { Component, OnInit } from '@angular/core';
+import {User} from "./user";
+import {USER_DATA} from "../data";
 
 export interface Tile {
   color: string;
@@ -23,10 +25,15 @@ export class ProfileComponent implements OnInit {
   address: string = "2801 4th Ave S Minneapolis, MN 4444-0034 USA"
   cityState: string = "Minneapolis, MN"
   country: string = "USA"
-
+  user: User[] = USER_DATA;
+  selectedUser: User = this.user[0]
 
   ngOnInit() {
+
   }
 
+  userSelected(firstName: string) {
+    this.selectedUser = this.user.filter(user => user.firstName === firstName)[0];
 
+  }
 }
