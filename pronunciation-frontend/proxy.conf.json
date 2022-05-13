@@ -1,0 +1,9 @@
+{
+  "/api/*": {
+    "target": "https://ace-wording-350011.uc.r.appspot.com/pronunciation/english",
+    "secure": false,
+    "changeOrigin": true,
+    "logLevel": "debug",
+    "pathRewrite": {"^/" : ""}
+  }
+}

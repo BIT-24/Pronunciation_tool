@@ -12,11 +12,12 @@ import {MatCardModule} from "@angular/material/card";
 import {FormsModule, ReactiveFormsModule} from "@angular/forms";
 import {MatTabsModule} from "@angular/material/tabs";
 import {MatMenuModule} from "@angular/material/menu";
+import {HttpClientModule} from "@angular/common/http";
 
 @NgModule({
   declarations: [
     AppComponent,
-    ProfileComponent,
+    ProfileComponent
   ],
     imports: [
         BrowserModule,
@@ -29,7 +30,8 @@ import {MatMenuModule} from "@angular/material/menu";
         ReactiveFormsModule,
         FormsModule,
         MatTabsModule,
-        MatMenuModule
+        MatMenuModule,
+        HttpClientModule
     ],
   providers: [],
   bootstrap: [AppComponent]
