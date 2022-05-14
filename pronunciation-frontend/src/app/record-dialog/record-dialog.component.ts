@@ -53,6 +53,7 @@ export class RecordDialogComponent implements OnInit {
   }
 
   save() {
+    //TODO send back audioFiles array to profile component to be saved
     this.matDialogRef.close();
   }
 
@@ -63,6 +64,7 @@ export class RecordDialogComponent implements OnInit {
       console.log('start recording');
       this.mediaRecorder.start();
       // TODO increment the duration until max duration of 5 seconds the auto-stop recording
+      // TODO this will fill up progress bar 0 - 100
     } else {
       console.log('stop recording');
       this.mediaRecorder.stop();

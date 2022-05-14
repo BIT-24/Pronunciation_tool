@@ -38,11 +38,14 @@ export class ProfileComponent implements OnInit {
   }
 
   openRecordDialog() {
-    this.dialog.open(RecordDialogComponent,
+    let recordDialog = this.dialog.open(RecordDialogComponent,
       {
         height: '250px',
         width: '250px',
         disableClose: true
       });
+
+    // TODO save the data returned to a database, need a service call
+    recordDialog.afterClosed().subscribe(data => console.log(data));
   }
 }
