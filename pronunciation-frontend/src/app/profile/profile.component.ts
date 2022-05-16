@@ -96,7 +96,21 @@ export class ProfileComponent implements OnInit {
   }
 
   listenName() {
+
     // TODO play with saved audio file returned from dialog box
     // TODO need to figure out how to play audio from blobevent
   }
+
+  customRecordedPronunciation() {
+    this.audioService
+      .getUserRecordedAudio()
+      .subscribe(data => {
+        console.log(data);
+        let urlBlob = URL.createObjectURL(data);
+        this.audio = this.dom.bypassSecurityTrustUrl(urlBlob);
+      });
+
+  }
+
+
 }

@@ -45,6 +45,10 @@
               System Default Pronunciation
               <audio autoplay [src]="this.audio"></audio>
             </button>
+            <button mat-menu-item (click)="customRecordedPronunciation()">
+              <mat-icon>play_circle_filled</mat-icon>
+              Recorded Pronunciation
+            </button>
             <button mat-menu-item (click)="openRecordDialog()">
               <mat-icon>mic</mat-icon>
               Record New Pronunciation
