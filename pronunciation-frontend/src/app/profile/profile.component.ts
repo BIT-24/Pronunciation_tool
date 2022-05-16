@@ -1,4 +1,11 @@
-import { Component, OnInit } from '@angular/core';
+import {Component, OnInit} from '@angular/core';
+import {MatDialog} from "@angular/material/dialog";
+import {RecordDialogComponent} from "../record-dialog/record-dialog.component";
+import {User} from "./user";
+import {USER_DATA} from "../data";
+import {PronunciationService} from "./pronunciation.service";
+import {DomSanitizer} from "@angular/platform-browser";
+import {Observable} from "rxjs";
 
 export interface Tile {
   color: string;
@@ -13,164 +20,109 @@ export interface Tile {
   styleUrls: ['./profile.component.scss']
 })
 export class ProfileComponent implements OnInit {
-  sayCommand: string;
-  recommendedVoices: any;
-  rates: number[];
-  selectedRate: number;
-  selectedVoice: SpeechSynthesisVoice | null;
-  text: string;
+  audio: any;
+  user: User[] = USER_DATA;
+  selectedUser: User = this.user[0]
+  audioBlobUrl: BlobEvent | undefined;
   voices: SpeechSynthesisVoice[];
+  selectedVoice: SpeechSynthesisVoice | null;
+  audioFile: any;
 
-  // I initialize the app component.
-  constructor() {
-
+  constructor(public dialog: MatDialog,
+              private audioService: PronunciationService,
+              private dom: DomSanitizer) {
     this.voices = [];
-    this.rates = [ .25, .5, .75, 1, 1.25, 1.5, 1.75, 2 ];
     this.selectedVoice = null;
-    this.selectedRate = 1;
-    // Dirty Dancing for the win!
-    this.text = "Me? ... I’m scared of everything. I’m scared of what I saw, of what I did, of who I am. And most of all, I’m scared of walking out of this room and never feeling the rest of my whole life ... the way I feel when I’m with you.";
-    this.sayCommand = "";
-
-    // These are "recommended" in so much as that these are the voices that I (Ben)
-    // could understand most clearly.
-    this.recommendedVoices = Object.create( null );
-    this.recommendedVoices[ "Alex" ] = true;
-    this.recommendedVoices[ "Alva" ] = true;
-    this.recommendedVoices[ "Damayanti" ] = true;
-    this.recommendedVoices[ "Daniel" ] = true;
-    this.recommendedVoices[ "Fiona" ] = true;
-    this.recommendedVoices[ "Fred" ] = true;
-    this.recommendedVoices[ "Karen" ] = true;
-    this.recommendedVoices[ "Mei-Jia" ] = true;
-    this.recommendedVoices[ "Melina" ] = true;
-    this.recommendedVoices[ "Moira" ] = true;
-    this.recommendedVoices[ "Rishi" ] = true;
-    this.recommendedVoices[ "Samantha" ] = true;
-    this.recommendedVoices[ "Tessa" ] = true;
-    this.recommendedVoices[ "Veena" ] = true;
-    this.recommendedVoices[ "Victoria" ] = true;
-    this.recommendedVoices[ "Yuri" ] = true;
-
   }
 
-  // ---
-  // PUBLIC METHODS.
-  // ---
-
-  // I demo the currently-selected voice.
-  public demoSelectedVoice() : void {
-
-    if ( ! this.selectedVoice ) {
-
-      console.warn( "Expected a voice, but none was selected." );
-      return;
-
-    }
-
-    var demoText = "Best wishes and warmest regards.";
-
-    this.stop();
-    this.synthesizeSpeechFromText( this.selectedVoice, this.selectedRate, demoText );
-
-  }
-
-
-  // I get called once after the inputs have been bound for the first time.
-  public ngOnInit() : void {
+  ngOnInit() {
+    this.isRecorded()
 
     this.voices = speechSynthesis.getVoices();
-    this.selectedVoice = ( this.voices[ 0 ] || null );
-    this.updateSayCommand();
+    this.selectedVoice = (this.voices[0] || null);
 
-    // The voices aren't immediately available (or so it seems). As such, if no
-    // voices came back, let's assume they haven't loaded yet and we need to wait for
-    // the "voiceschanged" event to fire before we can access them.
-    if ( ! this.voices.length ) {
-
+    if (!this.voices.length) {
       speechSynthesis.addEventListener(
         "voiceschanged",
         () => {
-
           this.voices = speechSynthesis.getVoices();
-          this.selectedVoice = ( this.voices[ 0 ] || null );
-          this.updateSayCommand();
-
+          this.selectedVoice = (this.voices[0] || null);
         }
       );
-
     }
+  }
+
+  defaultPronunciation() {
+    this.audioService
+      .getStandardAudio(this.selectedUser.firstName, this.selectedUser.lastName)
+      .subscribe(data => {
+        let urlBlob = URL.createObjectURL(data);
+        this.audio = this.dom.bypassSecurityTrustUrl(urlBlob);
+      });
+  }
+
+  userSelected(firstName: string) {
+    this.selectedUser = this.user.filter(user => user.firstName === firstName)[0];
+  }
+
+  openRecordDialog() {
+    let recordDialog = this.dialog.open(RecordDialogComponent,
+      {
+        height: '250px',
+        width: '250px',
+        disableClose: true
+      });
+
+    recordDialog.afterClosed().subscribe(data => {
+      this.audioBlobUrl = data.audioUrl;
+      this.audioFile = data.audioFile;
+      const formData = new FormData();
+      formData.append('file', this.audioFile);
+      formData.append('userName', this.selectedUser.id + this.selectedUser.firstName + this.selectedUser.lastName);
+      this.audioService.addNonStandardAudio(formData).subscribe(data =>{
+      })
+      let userIndex = this.user.findIndex(user => user.id === this.selectedUser.id);
+      this.user[userIndex].recorded = true;
+    });
 
   }
 
-
-  // I synthesize speech from the current text for the currently-selected voice.
-  public speak() : void {
-
-    if ( ! this.selectedVoice || ! this.text ) {
-
-      return;
-
-    }
-
-    this.stop();
-    this.synthesizeSpeechFromText( this.selectedVoice, this.selectedRate, this.text );
-
+  speakPreferredPronunciation(firstName: string, lastName: string, voiceName: string){
+    this.synthesizeSpeechFromText(1, `${firstName} ${lastName}`, voiceName);
   }
 
-
-  // I stop any current speech synthesis.
-  public stop() : void {
-
-    if ( speechSynthesis.speaking ) {
-
-      speechSynthesis.cancel();
-
-    }
-
-  }
-
-
-  // I update the "say" command that can be used to generate the a sound file from the
-  // current speech synthesis configuration.
-  public updateSayCommand() : void {
-
-    if ( ! this.selectedVoice || ! this.text ) {
-
-      return;
-
-    }
-
-    // With the say command, the rate is the number of words-per-minute. As such, we
-    // have to finagle the SpeechSynthesis rate into something roughly equivalent for
-    // the terminal-based invocation.
-    var sanitizedRate = Math.floor( 200 * this.selectedRate );
-    var sanitizedText = this.text
-      .replace( /[\r\n]/g, " " )
-      .replace( /(["'\\\\/])/g, "\\$1" )
-    ;
-
-    this.sayCommand = `say --voice ${ this.selectedVoice.name } --rate ${ sanitizedRate } --output-file=demo.aiff "${ sanitizedText }"`;
-
-  }
-
-  // ---
-  // PRIVATE METHODS.
-  // ---
-
-  // I perform the low-level speech synthesis for the given voice, rate, and text.
   private synthesizeSpeechFromText(
-    voice: SpeechSynthesisVoice,
     rate: number,
-    text: string
-  ) : void {
+    text: string,
+    voiceName: string
+  ): void {
 
-    var utterance = new SpeechSynthesisUtterance( text );
-    utterance.voice = this.selectedVoice;
+    let speechSynthesisVoice = this.voices.filter(voice => voice.name === voiceName)[0];
+
+    const utterance = new SpeechSynthesisUtterance(text);
+    utterance.voice = speechSynthesisVoice ? speechSynthesisVoice : this.selectedVoice;
     utterance.rate = rate;
+    speechSynthesis.speak(utterance);
+  }
 
-    speechSynthesis.speak( utterance );
+  isRecorded(){
+    this.user.forEach(user => {
+      this.audioService.getNonStandardAudio(user.id, user.firstName, user.lastName).subscribe( res => {
+        if(res){
+          user.recorded = true;
+        }
+        }
+      )
+    })
+  }
 
+  customRecordedPronunciation() {
+    this.audioService
+      .getNonStandardAudio(this.selectedUser.id, this.selectedUser.firstName, this.selectedUser.lastName)
+      .subscribe(data => {
+        let urlBlob = URL.createObjectURL(data);
+        this.audio = this.dom.bypassSecurityTrustUrl(urlBlob);
+      });
   }
 
 

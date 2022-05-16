@@ -1,5 +1,32 @@
 .mat-grid-tile-content{
   align-items: start;
   justify-content: left;
-  padding-top: 3%;
+  //padding-top: 3%;
+  margin-top: 3%;
+
+}
+.imageGrid{
+  margin: 3%;
+  display: block;
+}
+
+.blueText{
+  color: #0366d6;
+  text-decoration: none;
+}
+
+.mat-card2{
+  background: #ffffff;
+  color: #000000;
+  box-shadow: none;
+}
+
+.lastGrid{
+  background: none;
+  color: black;
+  padding: 16px 0;
+  }
+
+.mat-card:not([class*=mat-elevation-z]) {
+  box-shadow: none;
 }

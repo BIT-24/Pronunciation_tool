@@ -1,0 +1,14 @@
+<div class="content">
+  <mat-icon matRipple [matRippleCentered]="true"
+            class="icon-display content-item"
+            (click)="recordAndStop()">{{this.audioFile ? 'square' : 'mic'}}</mat-icon>
+  <div class="break"></div> <!-- break -->
+  <audio *ngFor="let audio of audioFiles" controls="controls" [src]="audio"></audio>
+  <div class="break"></div> <!-- break -->
+  <mat-progress-bar class="content-item" mode="determinate" value="{{duration}}"></mat-progress-bar>
+  <div class="break"></div> <!-- break -->
+  <div class="content-item">
+    <button mat-raised-button color="accent" (click)="close()">Close</button>
+    <button mat-raised-button color="primary" (click)="save()">Save</button>
+  </div>
+</div>

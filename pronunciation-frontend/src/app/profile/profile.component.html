@@ -4,153 +4,89 @@
     <p style="margin: 0; font-size: 14px;">Teamworks</p>
     <h1 style="margin-top: 0;">Personal Workspace</h1>
   </div>
-  <!--  <span class="example-spacer"></span>-->
 </mat-toolbar>
-<!--<mat-grid-list cols="5" rowHeight="100%">-->
-<!--  &lt;!&ndash;  <mat-grid-tile&ndash;&gt;-->
-<!--  &lt;!&ndash;    *ngFor="let tile of tiles"&ndash;&gt;-->
-<!--  &lt;!&ndash;    [colspan]="tile.cols"&ndash;&gt;-->
-<!--  &lt;!&ndash;    [rowspan]="tile.rows"&ndash;&gt;-->
-<!--  &lt;!&ndash;    [style.background]="tile.color">&ndash;&gt;-->
-<!--  &lt;!&ndash;    {{tile.text}}&ndash;&gt;-->
-<!--  &lt;!&ndash;  </mat-grid-tile>&ndash;&gt;-->
-<!--  <mat-grid-tile [colspan]="1" [rowspan]="1">-->
-<!--    <div class="mat-grid-tile-content">-->
-<!--      <p>this is sidebar left></p>-->
-<!--    </div>-->
-<!--  </mat-grid-tile>-->
-<!--  <mat-grid-tile   [colspan]="3" [rowspan]="1" >-->
-<!--    <div class="mat-grid-tile-content">-->
-<!--      <p>this is the middle section</p>-->
-<!--    </div>-->
-<!--  </mat-grid-tile>-->
-<!--  <mat-grid-tile [colspan]="1" [rowspan]="1">-->
-<!--    <div class="mat-grid-tile-content">-->
-<!--      <mat-card>-->
-<!--        <mat-card-header>-->
-<!--          <mat-card-title>Organizational Outline</mat-card-title>-->
-<!--        </mat-card-header>-->
-<!--        <mat-card-content>-->
-<!--          <ul>-->
-<!--            <li>list of names...</li>-->
-<!--            <li>replace with array of names and titles</li>-->
-<!--          </ul>-->
-<!--        </mat-card-content>-->
-<!--      </mat-card>-->
-<!--    </div>-->
-<!--  </mat-grid-tile>-->
-<!--</mat-grid-list>-->
-
-<div class="form-field">
-  <label for="voice-control" class="form-field__label">
-    Voice:
-  </label>
-  <div class="form-field__content">
-    <select
-      id="voice-control"
-      name="voice"
-      [(ngModel)]="selectedVoice"
-      (change)="demoSelectedVoice(); updateSayCommand()"
-      class="form-field__control">
-      <option value="">- Select a voice -</option>
-      <option
-        *ngFor="let voice of voices"
-        [ngValue]="voice">
-        {{ voice.name }}
-
-        <ng-template [ngIf]="recommendedVoices[ voice.name ]">
-          &larr; Recommended
-        </ng-template>
-      </option>
-    </select>
-
-    <div class="form-field__subnote">
-      ( &larr; ) indicates a voice that Ben could understand clearly.
+<mat-grid-list cols="5" rowHeight="100%">
+  <mat-grid-tile [colspan]="1" [rowspan]="1">
+    <div class="mat-grid-tile-content imageGrid">
+      <img src="../../assets/icon/{{selectedUser.avatar}}" width="100%" alt="Person image"><br><br>
+      <div class="blueText">
+        Newsfeed<br><br>
+        profile<br><br>
+        Tasks<br><br>
+      </div>
     </div>
-  </div>
-</div>
+  </mat-grid-tile>
+  <mat-grid-tile [colspan]="3" [rowspan]="1">
+    <div class="mat-grid-tile-content">
+      <div style="line-height: 0;">
+          <h1 style=" line-height: revert; margin: 3% 0 0; font-size: xx-large ">{{selectedUser.firstName}} {{selectedUser.lastName}}
+          <button mat-button [matMenuTriggerFor]="menu">
+            <mat-icon>play_circle_filled</mat-icon>
+          </button>
+          <mat-menu #menu="matMenu">
+            <button mat-menu-item *ngIf="this.selectedUser.recorded" (click)="customRecordedPronunciation()">
+              <mat-icon>play_circle_filled</mat-icon>
+              Recorded Pronunciation
+            </button>
+            <button mat-menu-item [matMenuTriggerFor]="voiceMenu">
+              <mat-icon>play_circle_filled</mat-icon>
+              Available System Pronunciations
+              <mat-menu #voiceMenu="matMenu">
+                <button mat-menu-item *ngFor="let voice of voices"
+                        (click)="speakPreferredPronunciation(selectedUser.firstName, selectedUser.lastName, voice.name)">
+                  {{voice.name}} - {{voice.lang}}
+                </button>
+              </mat-menu>
+            </button>
+            <button mat-menu-item (click)="defaultPronunciation()">
+              <mat-icon>play_circle_filled</mat-icon>
+              System Default Pronunciation
+              <audio autoplay [src]="this.audio"></audio>
+            </button>
+            <button mat-menu-item (click)="openRecordDialog()">
+              <mat-icon>mic</mat-icon>
+              Record New Pronunciation
+            </button>
+          </mat-menu>
+        </h1>
+        <br/>
+        <h4>{{selectedUser.title}} | {{selectedUser.department}}</h4>
+        <p style="margin-top: 3px">
+          <a href="profile.component.html">
+            <mat-icon aria-hidden="false"  class="material-icons-outlined" aria-label="edit profile">mode_edit</mat-icon>
+            edit</a> your profile</p>
+          <p style="line-height: 20px">
+            Tell others about yourself and share your areas of expertise by <a href="profile.component.html">editing your profile</a>.
+          </p>
+          <p style="line-height: 40px">
+            Contact Information&nbsp;&emsp;<span class="blueText">Business Title/Organization&nbsp;&emsp;Professional</span><br>
+            Legal Name:&nbsp;&emsp;{{selectedUser.firstName}} {{selectedUser.lastName}}<br>
+            MAC:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&emsp;{{selectedUser.mac}}<br>
+            Address:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&emsp;{{selectedUser.address}}<br>
+            User Id:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&emsp;{{selectedUser.id}}<br>
+            Center:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&emsp;{{selectedUser.center}}
+          </p>
 
-<div class="form-field">
-  <label for="rate-control" class="form-field__label">
-    Speed:
-  </label>
-  <div class="form-field__content">
-    <select
-      id="rate-control"
-      name="rate"
-      [(ngModel)]="selectedRate"
-      (change)="demoSelectedVoice(); updateSayCommand()"
-      class="form-field__control">
-      <option
-        *ngFor="let rate of rates"
-        [ngValue]="rate">
-        {{ rate }}
-
-        <ng-template [ngIf]="( rate === 1 )">
-          ( Normal )
-        </ng-template>
-      </option>
-    </select>
-  </div>
-</div>
-
-<div class="form-field">
-  <label for="text-control" class="form-field__label">
-    Text:
-  </label>
-  <div class="form-field__content">
-		<textarea
-      id="text-control"
-      name="text"
-      [(ngModel)]="text"
-      (input)="updateSayCommand()"
-      (keydown.Meta.Enter)="speak()"
-      class="form-field__control"
-    ></textarea>
-
-    <div class="form-field__subnote">
-      You can hit <code>CMD+Enter</code> to speak text.
+      </div>
     </div>
-  </div>
-</div>
-
-<div class="form-actions">
-  <button
-    type="button"
-    (click)="speak()"
-    class="form-actions__button">
-    Speak text
-  </button>
-
-  <button
-    type="button"
-    (click)="stop()"
-    class="form-actions__button form-actions__button--secondary">
-    Stop speaking
-  </button>
-</div>
-
-
-<div *ngIf="sayCommand" class="say">
-
-  <h3 class="say__title">
-    On MacOS? Want to generate a sound file?
-  </h3>
-
-  <p class="say__description">
-    In the terminal, you can use the <code>say</code> binary to generate an audio
-    file (.aiff) using the following command:
-  </p>
-
-  <input
-    #sayRef
-    [value]="sayCommand"
-    (click)="sayRef.select()"
-    (focus)="sayRef.select()"
-    class="say__code"
-  />
-
-</div>
+  </mat-grid-tile>
+  <mat-grid-tile [colspan]="1" [rowspan]="1">
+    <div class="mat-grid-tile-content">
+      <mat-card class="lastGrid" >
+        <mat-card-header>
+          <mat-card-title style="background-color: #696b6e; color: #FFFFFF; padding: 2%">Organizational Outline</mat-card-title>
+        </mat-card-header>
+        <mat-card-content class="mat-card2">
+          <ul>
+            <li *ngFor="let userInfo of user"><a (click)="userSelected(userInfo.firstName)"
+                                                 class="blueText">{{userInfo.firstName}} {{userInfo.lastName}}</a><br> {{userInfo.title}}
+            </li>
+          </ul>
+        </mat-card-content>
+      </mat-card>
+    </div>
+  </mat-grid-tile>
+</mat-grid-list>
 
 
 
