@@ -3,11 +3,11 @@ Team members - Lal Sah, Arno Baccam, Ryan Spice, Natalie Hong, Vishal Barot
 
 Playbook URL - https://docs.google.com/document/d/1BHy7D_kFAWobKh-JV4TEf1j2IXgRh7zXDFHKeP8aXJg/edit?usp=sharing
 
-Video URL - 
+UI Video URL - https://storage.googleapis.com/bit24-submissions/Bit24-PronunciationAPIDemo.mov
 
 ## Development server
 
-Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The application will automatically reload if you change any of the source files.
+CD in Pronunciation-frontend folder and Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The application will automatically reload if you change any of the source files.
 
 ## Code scaffolding
 
