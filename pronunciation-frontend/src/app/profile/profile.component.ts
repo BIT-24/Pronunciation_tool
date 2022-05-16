@@ -20,13 +20,29 @@ export interface Tile {
 export class ProfileComponent implements OnInit {
   user: User[] = USER_DATA;
   selectedUser: User = this.user[0]
-
+  audioFile: BlobEvent | undefined;
+  voices: SpeechSynthesisVoice[];
+  selectedVoice: SpeechSynthesisVoice | null;
 
   constructor(public dialog: MatDialog, private audioService: PronunciationService) {
+    this.voices = [];
+    this.selectedVoice = null;
   }
 
   ngOnInit() {
+    this.voices = speechSynthesis.getVoices();
+    this.selectedVoice = (this.voices[0] || null);
 
+    if (!this.voices.length) {
+      speechSynthesis.addEventListener(
+        "voiceschanged",
+        () => {
+          this.voices = speechSynthesis.getVoices();
+          this.selectedVoice = (this.voices[0] || null);
+          console.log(this.voices);
+        }
+      );
+    }
   }
   audio: any;
   defaultPronunciation() {
@@ -46,10 +62,39 @@ export class ProfileComponent implements OnInit {
       });
 
     // TODO save the data returned to a database, need a service call
-    recordDialog.afterClosed().subscribe(data => console.log(data));
+    recordDialog.afterClosed().subscribe(data => {
+      console.log(data);
+      this.audioFile = data;
+      console.log(this.audioFile);
+    });
+  }
+
+  // TODO this should call our speech API instead of the angular-speech synthesizer
+  speakName(firstName: string, lastName: string){
+    this.synthesizeSpeechFromText(1, `${firstName} ${lastName}`, 'default');
+  }
+
+  speakPreferredPronunciation(firstName: string, lastName: string, voiceName: string){
+    this.synthesizeSpeechFromText(1, `${firstName} ${lastName}`, voiceName);
+  }
+
+  private synthesizeSpeechFromText(
+    rate: number,
+    text: string,
+    voiceName: string
+  ): void {
+
+    let speechSynthesisVoice = this.voices.filter(voice => voice.name === voiceName)[0];
+
+    const utterance = new SpeechSynthesisUtterance(text);
+    utterance.voice = speechSynthesisVoice ? speechSynthesisVoice : this.selectedVoice;
+    utterance.rate = rate;
+
+    speechSynthesis.speak(utterance);
   }
 
   listenName() {
-
+    // TODO play with saved audio file returned from dialog box
+    // TODO need to figure out how to play audio from blobevent
   }
 }

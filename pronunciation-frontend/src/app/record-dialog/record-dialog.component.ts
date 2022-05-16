@@ -54,7 +54,7 @@ export class RecordDialogComponent implements OnInit {
 
   save() {
     //TODO send back audioFiles array to profile component to be saved
-    this.matDialogRef.close();
+    this.matDialogRef.close(this.audioFiles[0]);
   }
 
   recordAndStop() {

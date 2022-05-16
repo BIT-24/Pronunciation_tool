@@ -16,7 +16,7 @@
       </div>
     </div>
   </mat-grid-tile>
-  <mat-grid-tile   [colspan]="3" [rowspan]="1" >
+  <mat-grid-tile [colspan]="3" [rowspan]="1">
     <div class="mat-grid-tile-content">
       <div style="line-height: 0;">
           <h1 style=" line-height: revert; margin: 3% 0 0; font-size: xx-large ">{{selectedUser.firstName}} {{selectedUser.lastName}}
@@ -24,15 +24,24 @@
             <mat-icon>play_circle_filled</mat-icon>
           </button>
           <mat-menu #menu="matMenu">
-            <button mat-menu-item (click)="listenName()">
+            <!-- This needs to call into our service to grab the recorded audio -->
+            <button mat-menu-item *ngIf="this.audioFile" (click)="listenName()">
               <mat-icon>play_circle_filled</mat-icon>
               Recorded Pronunciation
             </button>
-            <button mat-menu-item>
+            <!-- This needs to allow user to choose from a list of available system pronunciations -->
+            <button mat-menu-item [matMenuTriggerFor]="voiceMenu">
               <mat-icon>play_circle_filled</mat-icon>
-              System Locale Pronunciation
+              Available System Pronunciations
+              <mat-menu #voiceMenu="matMenu">
+                <button mat-menu-item *ngFor="let voice of voices"
+                        (click)="speakPreferredPronunciation(selectedUser.firstName, selectedUser.lastName, voice.name)">
+                  {{voice.name}} - {{voice.lang}}
+                </button>
+              </mat-menu>
             </button>
-            <button mat-menu-item (click)="defaultPronunciation()">
+            <!-- This should call our name pronunciation for system default pronunciation -->
+            <button mat-menu-item (click)="speakName(selectedUser.firstName, selectedUser.lastName)">
               <mat-icon>play_circle_filled</mat-icon>
               System Default Pronunciation
             </button>
@@ -40,7 +49,8 @@
               <mat-icon>mic</mat-icon>
               Record New Pronunciation
             </button>
-          </mat-menu></h1>
+          </mat-menu>
+        </h1>
         <br/>
         <h4>{{selectedUser.title}} | {{selectedUser.department}}</h4>
         <p style="margin-top: 3px">
@@ -70,7 +80,9 @@
         </mat-card-header>
         <mat-card-content class="mat-card2">
           <ul>
-            <li *ngFor="let userInfo of user"><a (click)="userSelected(userInfo.firstName)" class="blueText">{{userInfo.firstName}} {{userInfo.lastName}}</a><br> {{userInfo.title}}</li>
+            <li *ngFor="let userInfo of user"><a (click)="userSelected(userInfo.firstName)"
+                                                 class="blueText">{{userInfo.firstName}} {{userInfo.lastName}}</a><br> {{userInfo.title}}
+            </li>
           </ul>
         </mat-card-content>
       </mat-card>
