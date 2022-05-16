@@ -28,7 +28,7 @@ export class ProfileComponent implements OnInit {
   ngOnInit() {
 
   }
-
+  audio: any;
   defaultPronunciation() {
     this.audioService.getUserNameAudio(this.selectedUser.firstName, this.selectedUser.lastName).subscribe()
   }
@@ -44,5 +44,9 @@ export class ProfileComponent implements OnInit {
         width: '250px',
         disableClose: true
       });
+  }
+
+  listenName() {
+
   }
 }

@@ -8,7 +8,7 @@
 <mat-grid-list cols="5" rowHeight="100%">
   <mat-grid-tile [colspan]="1" [rowspan]="1">
     <div class="mat-grid-tile-content imageGrid">
-      <img src="./assets/icon/download.png" alt="Person image"><br><br>
+      <img src="../../assets/icon/{{selectedUser.avatar}}" width="100%" alt="Person image"><br><br>
       <div class="blueText">
         Newsfeed<br><br>
         profile<br><br>
@@ -19,12 +19,12 @@
   <mat-grid-tile   [colspan]="3" [rowspan]="1" >
     <div class="mat-grid-tile-content">
       <div style="line-height: 0;">
-          <h1 style=" line-height: revert; margin-top: 3%; font-size: xx-large">{{selectedUser.firstName}} {{selectedUser.lastName}}
+          <h1 style=" line-height: revert; margin: 3% 0 0; font-size: xx-large ">{{selectedUser.firstName}} {{selectedUser.lastName}}
           <button mat-button [matMenuTriggerFor]="menu">
             <mat-icon>play_circle_filled</mat-icon>
           </button>
           <mat-menu #menu="matMenu">
-            <button mat-menu-item>
+            <button mat-menu-item (click)="listenName()">
               <mat-icon>play_circle_filled</mat-icon>
               Recorded Pronunciation
             </button>
@@ -52,9 +52,9 @@
           </p>
           <p style="line-height: 40px">
             Contact Information&nbsp;&emsp;<span class="blueText">Business Title/Organization&nbsp;&emsp;Professional</span><br>
-            Legal Name:&nbsp;&nbsp;&emsp;{{selectedUser.firstName}} {{selectedUser.lastName}}<br>
-            MAC:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&emsp;{{selectedUser.mac}}<br>
-            Address:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&emsp;{{selectedUser.address}}<br>
+            Legal Name:&nbsp;&emsp;{{selectedUser.firstName}} {{selectedUser.lastName}}<br>
+            MAC:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&emsp;{{selectedUser.mac}}<br>
+            Address:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&emsp;{{selectedUser.address}}<br>
             User Id:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&emsp;{{selectedUser.id}}<br>
             Center:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&emsp;{{selectedUser.center}}
           </p>
@@ -64,9 +64,9 @@
   </mat-grid-tile>
   <mat-grid-tile [colspan]="1" [rowspan]="1">
     <div class="mat-grid-tile-content">
-      <mat-card>
+      <mat-card class="lastGrid" >
         <mat-card-header>
-          <mat-card-title>Organizational Outline</mat-card-title>
+          <mat-card-title style="background-color: #696b6e; color: #FFFFFF; padding: 2%">Organizational Outline</mat-card-title>
         </mat-card-header>
         <mat-card-content class="mat-card2">
           <ul>

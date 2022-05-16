@@ -9,4 +9,6 @@ export interface User {
   address: string;
   cityState: string;
   country: string;
+  avatar: string;
+
 }
