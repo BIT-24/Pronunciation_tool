@@ -10,5 +10,5 @@ export interface User {
   cityState: string;
   country: string;
   avatar: string;
-
+  recorded: boolean;
 }

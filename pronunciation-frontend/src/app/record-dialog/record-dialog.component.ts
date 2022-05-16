@@ -2,8 +2,6 @@ import {ChangeDetectorRef, Component, OnInit} from '@angular/core';
 import {MatDialogRef} from '@angular/material/dialog';
 import {DomSanitizer} from "@angular/platform-browser";
 
-declare const MediaRecorder: any;
-
 @Component({
   selector: 'app-record-dialog',
   templateUrl: './record-dialog.component.html',
@@ -16,8 +14,10 @@ export class RecordDialogComponent implements OnInit {
   public mediaRecorder: any;
   public chunks:any[] = [];
   public audioFiles:any[] = [];
+  file: File | undefined;
 
-  constructor(private matDialogRef: MatDialogRef<RecordDialogComponent>, private cd: ChangeDetectorRef, private dom: DomSanitizer) {
+  constructor(private matDialogRef: MatDialogRef<RecordDialogComponent>,
+              private cd: ChangeDetectorRef, private dom: DomSanitizer) {
   }
 
   ngOnInit(): void {
@@ -29,12 +29,14 @@ export class RecordDialogComponent implements OnInit {
         this.mediaRecorder = new MediaRecorder(stream);
         this.mediaRecorder.onstop = (event: any) => {
           console.log(event);
-          const blob = new Blob(this.chunks, {type: 'audio/ogg; codecs=opus'});
+          const blob = new Blob(this.chunks, {type: 'audio/webm; codecs=opus'});
           this.chunks = [];
           const audioUrl = URL.createObjectURL(blob);
           this.audioFiles.push(this.dom.bypassSecurityTrustUrl(audioUrl));
           console.log(audioUrl);
           this.cd.detectChanges();
+          this.file = new File([blob], "testing", {type: 'mp3'})
+          console.log("Blob - Json: " + JSON.stringify(this.file))
         };
 
         this.mediaRecorder.ondataavailable = (event: { data: any; }) => {
@@ -54,7 +56,11 @@ export class RecordDialogComponent implements OnInit {
 
   save() {
     //TODO send back audioFiles array to profile component to be saved
-    this.matDialogRef.close(this.audioFiles[0]);
+    this.matDialogRef.close({
+      audioUrl: this.audioFiles[0],
+      audioFile: this.file
+
+    });
   }
 
   recordAndStop() {

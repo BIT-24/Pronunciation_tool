@@ -5,6 +5,7 @@ import {User} from "./user";
 import {USER_DATA} from "../data";
 import {PronunciationService} from "./pronunciation.service";
 import {DomSanitizer} from "@angular/platform-browser";
+import {Observable} from "rxjs";
 
 export interface Tile {
   color: string;
@@ -21,11 +22,14 @@ export interface Tile {
 export class ProfileComponent implements OnInit {
   user: User[] = USER_DATA;
   selectedUser: User = this.user[0]
-  audioFile: BlobEvent | undefined;
+  audioBlobUrl: BlobEvent | undefined;
   voices: SpeechSynthesisVoice[];
   selectedVoice: SpeechSynthesisVoice | null;
+  audioFile: any;
 
-  constructor(public dialog: MatDialog, private audioService: PronunciationService, private dom: DomSanitizer) {
+  constructor(public dialog: MatDialog,
+              private audioService: PronunciationService,
+              private dom: DomSanitizer) {
     this.voices = [];
     this.selectedVoice = null;
   }
@@ -48,7 +52,7 @@ export class ProfileComponent implements OnInit {
   audio: any;
   defaultPronunciation() {
     this.audioService
-      .getUserNameAudio(this.selectedUser.firstName, this.selectedUser.lastName)
+      .getStandardAudio(this.selectedUser.firstName, this.selectedUser.lastName)
       .subscribe(data => {
         console.log(data);
         let urlBlob = URL.createObjectURL(data);
@@ -71,8 +75,15 @@ export class ProfileComponent implements OnInit {
     // TODO save the data returned to a database, need a service call
     recordDialog.afterClosed().subscribe(data => {
       console.log(data);
-      this.audioFile = data;
-      console.log(this.audioFile);
+      this.audioBlobUrl = data.audioUrl;
+      this.audioFile = data.audioFile;
+      console.log(this.audioBlobUrl);
+      const formData = new FormData();
+      formData.append('file', this.audioFile);
+      formData.append('userName', this.selectedUser.id + this.selectedUser.firstName + this.selectedUser.lastName);
+      this.audioService.addNonStandardAudio(formData).subscribe(data =>{
+        console.log('Added Audio:' + data);
+      })
     });
   }
 
@@ -96,21 +107,20 @@ export class ProfileComponent implements OnInit {
   }
 
   listenName() {
-
     // TODO play with saved audio file returned from dialog box
     // TODO need to figure out how to play audio from blobevent
   }
 
   customRecordedPronunciation() {
     this.audioService
-      .getUserRecordedAudio()
+      .getNonStandardAudio(this.selectedUser.id, this.selectedUser.firstName, this.selectedUser.lastName)
       .subscribe(data => {
         console.log(data);
         let urlBlob = URL.createObjectURL(data);
         this.audio = this.dom.bypassSecurityTrustUrl(urlBlob);
       });
-
   }
+
 
 
 }
