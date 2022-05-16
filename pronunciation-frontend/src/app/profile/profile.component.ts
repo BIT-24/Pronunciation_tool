@@ -35,6 +35,8 @@ export class ProfileComponent implements OnInit {
   }
 
   ngOnInit() {
+    this.isRecorded()
+
     this.voices = speechSynthesis.getVoices();
     this.selectedVoice = (this.voices[0] || null);
 
@@ -83,8 +85,12 @@ export class ProfileComponent implements OnInit {
       formData.append('userName', this.selectedUser.id + this.selectedUser.firstName + this.selectedUser.lastName);
       this.audioService.addNonStandardAudio(formData).subscribe(data =>{
         console.log('Added Audio:' + data);
+
       })
+      let userIndex = this.user.findIndex(user => user.id === this.selectedUser.id);
+      this.user[userIndex].recorded = true;
     });
+
   }
 
   speakPreferredPronunciation(firstName: string, lastName: string, voiceName: string){
@@ -109,6 +115,18 @@ export class ProfileComponent implements OnInit {
   listenName() {
     // TODO play with saved audio file returned from dialog box
     // TODO need to figure out how to play audio from blobevent
+  }
+
+  isRecorded(){
+    this.user.forEach(user => {
+      this.audioService.getNonStandardAudio(user.id, user.firstName, user.lastName).subscribe( res => {
+        console.log('Response: '  + res)
+        if(res){
+          user.recorded = true;
+        }
+        }
+      )
+    })
   }
 
   customRecordedPronunciation() {
