@@ -4,6 +4,7 @@ import {RecordDialogComponent} from "../record-dialog/record-dialog.component";
 import {User} from "./user";
 import {USER_DATA} from "../data";
 import {PronunciationService} from "./pronunciation.service";
+import {DomSanitizer} from "@angular/platform-browser";
 
 export interface Tile {
   color: string;
@@ -24,7 +25,7 @@ export class ProfileComponent implements OnInit {
   voices: SpeechSynthesisVoice[];
   selectedVoice: SpeechSynthesisVoice | null;
 
-  constructor(public dialog: MatDialog, private audioService: PronunciationService) {
+  constructor(public dialog: MatDialog, private audioService: PronunciationService, private dom: DomSanitizer) {
     this.voices = [];
     this.selectedVoice = null;
   }
@@ -46,7 +47,13 @@ export class ProfileComponent implements OnInit {
   }
   audio: any;
   defaultPronunciation() {
-    this.audioService.getUserNameAudio(this.selectedUser.firstName, this.selectedUser.lastName).subscribe()
+    this.audioService
+      .getUserNameAudio(this.selectedUser.firstName, this.selectedUser.lastName)
+      .subscribe(data => {
+        console.log(data);
+        let urlBlob = URL.createObjectURL(data);
+        this.audio = this.dom.bypassSecurityTrustUrl(urlBlob);
+      });
   }
 
   userSelected(firstName: string) {
@@ -67,11 +74,6 @@ export class ProfileComponent implements OnInit {
       this.audioFile = data;
       console.log(this.audioFile);
     });
-  }
-
-  // TODO this should call our speech API instead of the angular-speech synthesizer
-  speakName(firstName: string, lastName: string){
-    this.synthesizeSpeechFromText(1, `${firstName} ${lastName}`, 'default');
   }
 
   speakPreferredPronunciation(firstName: string, lastName: string, voiceName: string){

@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import {Injectable} from '@angular/core';
 import {Observable} from "rxjs";
 import {HttpClient} from "@angular/common/http";
 
@@ -12,8 +12,8 @@ export class PronunciationService {
   spaceUrl = "%20"
   audioType = "?gender=male&lang="
 
-  getUserNameAudio(firstName: string, lastName: string): Observable<any>{
-    return this.http.get(this.audioUrl+firstName+this.spaceUrl+lastName+this.audioType);
+  getUserNameAudio(firstName: string, lastName: string): Observable<Blob> {
+    return this.http.get<Blob>(this.audioUrl + firstName + this.spaceUrl + lastName + this.audioType, { observe: 'body', responseType: 'blob' as 'json' })
   }
 
 }

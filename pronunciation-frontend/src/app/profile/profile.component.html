@@ -40,10 +40,10 @@
                 </button>
               </mat-menu>
             </button>
-            <!-- This should call our name pronunciation for system default pronunciation -->
-            <button mat-menu-item (click)="speakName(selectedUser.firstName, selectedUser.lastName)">
+            <button mat-menu-item (click)="defaultPronunciation()">
               <mat-icon>play_circle_filled</mat-icon>
               System Default Pronunciation
+              <audio autoplay [src]="this.audio"></audio>
             </button>
             <button mat-menu-item (click)="openRecordDialog()">
               <mat-icon>mic</mat-icon>
