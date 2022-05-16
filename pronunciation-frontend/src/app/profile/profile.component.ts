@@ -20,6 +20,7 @@ export interface Tile {
   styleUrls: ['./profile.component.scss']
 })
 export class ProfileComponent implements OnInit {
+  audio: any;
   user: User[] = USER_DATA;
   selectedUser: User = this.user[0]
   audioBlobUrl: BlobEvent | undefined;
@@ -46,17 +47,15 @@ export class ProfileComponent implements OnInit {
         () => {
           this.voices = speechSynthesis.getVoices();
           this.selectedVoice = (this.voices[0] || null);
-          console.log(this.voices);
         }
       );
     }
   }
-  audio: any;
+
   defaultPronunciation() {
     this.audioService
       .getStandardAudio(this.selectedUser.firstName, this.selectedUser.lastName)
       .subscribe(data => {
-        console.log(data);
         let urlBlob = URL.createObjectURL(data);
         this.audio = this.dom.bypassSecurityTrustUrl(urlBlob);
       });
@@ -74,18 +73,13 @@ export class ProfileComponent implements OnInit {
         disableClose: true
       });
 
-    // TODO save the data returned to a database, need a service call
     recordDialog.afterClosed().subscribe(data => {
-      console.log(data);
       this.audioBlobUrl = data.audioUrl;
       this.audioFile = data.audioFile;
-      console.log(this.audioBlobUrl);
       const formData = new FormData();
       formData.append('file', this.audioFile);
       formData.append('userName', this.selectedUser.id + this.selectedUser.firstName + this.selectedUser.lastName);
       this.audioService.addNonStandardAudio(formData).subscribe(data =>{
-        console.log('Added Audio:' + data);
-
       })
       let userIndex = this.user.findIndex(user => user.id === this.selectedUser.id);
       this.user[userIndex].recorded = true;
@@ -108,19 +102,12 @@ export class ProfileComponent implements OnInit {
     const utterance = new SpeechSynthesisUtterance(text);
     utterance.voice = speechSynthesisVoice ? speechSynthesisVoice : this.selectedVoice;
     utterance.rate = rate;
-
     speechSynthesis.speak(utterance);
-  }
-
-  listenName() {
-    // TODO play with saved audio file returned from dialog box
-    // TODO need to figure out how to play audio from blobevent
   }
 
   isRecorded(){
     this.user.forEach(user => {
       this.audioService.getNonStandardAudio(user.id, user.firstName, user.lastName).subscribe( res => {
-        console.log('Response: '  + res)
         if(res){
           user.recorded = true;
         }
@@ -133,7 +120,6 @@ export class ProfileComponent implements OnInit {
     this.audioService
       .getNonStandardAudio(this.selectedUser.id, this.selectedUser.firstName, this.selectedUser.lastName)
       .subscribe(data => {
-        console.log(data);
         let urlBlob = URL.createObjectURL(data);
         this.audio = this.dom.bypassSecurityTrustUrl(urlBlob);
       });

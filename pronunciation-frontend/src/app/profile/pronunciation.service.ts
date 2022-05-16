@@ -11,7 +11,6 @@ export class PronunciationService {
   private standardAudioUrl = "https://ace-wording-350011.uc.r.appspot.com/pronunciation/english/"
   private spaceUrl = "%20"
   private audioType = "?gender=male&lang="
-  //TODO need custom audio recorded url
   private getNonStandardAudioUrl = "https://pronunciation-api-cr-i7w2fpsyrq-uc.a.run.app/bit24/api/pronunciation/non-standard?userName=";
   private sendNonStandardAudioUrl = "https://pronunciation-api-cr-i7w2fpsyrq-uc.a.run.app/bit24/api/pronunciation/non-standard";
 

@@ -9,7 +9,6 @@ import {DomSanitizer} from "@angular/platform-browser";
 })
 export class RecordDialogComponent implements OnInit {
   public duration: number = 0;
-  public maxDuration: number = 5000;
   public audioFile: boolean = false;
   public mediaRecorder: any;
   public chunks:any[] = [];
@@ -25,28 +24,22 @@ export class RecordDialogComponent implements OnInit {
       navigator.mediaDevices.getUserMedia(
         {audio: true}
       ).then(stream => {
-        console.log(stream);
         this.mediaRecorder = new MediaRecorder(stream);
         this.mediaRecorder.onstop = (event: any) => {
-          console.log(event);
           const blob = new Blob(this.chunks, {type: 'audio/webm; codecs=opus'});
           this.chunks = [];
           const audioUrl = URL.createObjectURL(blob);
           this.audioFiles.push(this.dom.bypassSecurityTrustUrl(audioUrl));
-          console.log(audioUrl);
           this.cd.detectChanges();
           this.file = new File([blob], "testing", {type: 'mp3'})
-          console.log("Blob - Json: " + JSON.stringify(this.file))
         };
 
         this.mediaRecorder.ondataavailable = (event: { data: any; }) => {
-          console.log(event);
           this.chunks.push(event.data);
         }
       })
         .catch(err => console.log(err));
     } else {
-      console.log("there are no mediaDevices.");
     }
   }
 
@@ -55,11 +48,9 @@ export class RecordDialogComponent implements OnInit {
   }
 
   save() {
-    //TODO send back audioFiles array to profile component to be saved
     this.matDialogRef.close({
       audioUrl: this.audioFiles[0],
       audioFile: this.file
-
     });
   }
 
@@ -67,12 +58,8 @@ export class RecordDialogComponent implements OnInit {
     this.audioFile = !this.audioFile;
     if(this.audioFile) {
       this.audioFiles = [];
-      console.log('start recording');
       this.mediaRecorder.start();
-      // TODO increment the duration until max duration of 5 seconds the auto-stop recording
-      // TODO this will fill up progress bar 0 - 100
     } else {
-      console.log('stop recording');
       this.mediaRecorder.stop();
     }
   }

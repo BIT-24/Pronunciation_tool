@@ -24,12 +24,10 @@
             <mat-icon>play_circle_filled</mat-icon>
           </button>
           <mat-menu #menu="matMenu">
-            <!-- This needs to call into our service to grab the recorded audio -->
             <button mat-menu-item *ngIf="this.selectedUser.recorded" (click)="customRecordedPronunciation()">
               <mat-icon>play_circle_filled</mat-icon>
               Recorded Pronunciation
             </button>
-            <!-- This needs to allow user to choose from a list of available system pronunciations -->
             <button mat-menu-item [matMenuTriggerFor]="voiceMenu">
               <mat-icon>play_circle_filled</mat-icon>
               Available System Pronunciations
